@@ -1,0 +1,27 @@
+body {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-card {
+    max-width: 720px;
+    border-radius: 14px;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-radius: 10px;
+}
+
+footer {
+    margin-top: auto;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
