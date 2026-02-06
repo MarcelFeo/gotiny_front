@@ -1,5 +1,8 @@
 # 🚀 GoTiny - Encurtador de URLs
 
+[▶️ Assistir demo no YouTube](https://youtu.be/0lB5T_ID378)
+
+
 **Transforme URLs longas em links elegantes e fáceis de compartilhar**
 
 [Demo](#-demonstração) • [Recursos](#-recursos) • [Instalação](#-instalação) • [Uso](#-uso) • [API](#-api) • [Tecnologias](#-tecnologias)
