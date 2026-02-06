@@ -1,68 +1,169 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <title>GoTiny - Encurtador de URLs</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
-
-
-    <title>GoTiny</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="grain-overlay"></div>
 
-   <!-- NAVBAR -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="#">GoTiny</a>
-        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div id="menu" class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link active" href="#">Encurtar URL</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Compactar Vídeo (Em breve)</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Compactar Arquivos (Em breve)</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<!-- CONTEÚDO PRINCIPAL -->
-<div class="container my-5 d-flex justify-content-center">
-    <div class="card shadow-lg p-4 main-card w-100">
-        <h2 class="text-center mb-3">🔗 Encurtador de URLs</h2>
-        <p class="text-center text-muted">
-            Cole sua URL abaixo para gerar um link curto e compartilhar facilmente.
-        </p>
-
-        <!-- FORMULÁRIO -->
-        <form id="shortenForm">
-            <div class="input-group mb-3">
-                <span class="input-group-text"><i class="bi bi-link-45deg"></i></span>
-                <input type="url" class="form-control" placeholder="https://exemplo.com" required>
-                <button class="btn btn-primary" type="submit">Encurtar</button>
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M8 12L16 4L24 12M8 20L16 28L24 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="16" cy="16" r="3" fill="currentColor"/>
+                    </svg>
+                </div>
+                <span class="logo-text">GoTiny</span>
             </div>
-        </form>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalLinks">0</span>
+                    <span class="stat-label">Links criados</span>
+                </div>
+            </div>
+        </header>
 
-        <!-- RESULTADO -->
-        <div id="result" class="alert alert-success d-none">
-            <strong>URL curta:</strong>
-            <a href="#" id="shortUrl" target="_blank">http://gotiny.io/abc123</a>
-            <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyLink()">Copiar</button>
-        </div>
+        <main class="main">
+            <div class="hero">
+                <h1 class="hero-title">
+                    <span class="title-line">Encurte.</span>
+                    <span class="title-line">Compartilhe.</span>
+                    <span class="title-line gradient-text">Simplifique.</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Transforme URLs longas em links elegantes e fáceis de compartilhar
+                </p>
+            </div>
+
+            <div class="url-form-container">
+                <form id="urlForm" class="url-form">
+                    <div class="input-wrapper">
+                        <input
+                            type="url"
+                            id="urlInput"
+                            class="url-input"
+                            placeholder="Cole sua URL aqui..."
+                            required
+                            autocomplete="off"
+                        >
+                        <button type="submit" class="submit-btn">
+                            <span class="btn-text">Encurtar</span>
+                            <span class="btn-icon">→</span>
+                        </button>
+                    </div>
+                </form>
+
+                <div id="loadingState" class="loading-state hidden">
+                    <div class="loading-spinner"></div>
+                    <p>Criando seu link...</p>
+                </div>
+
+                <div id="resultCard" class="result-card hidden">
+                    <div class="result-header">
+                        <div class="success-badge">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                                <path d="M6 10L9 13L14 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                            <span>Link criado com sucesso!</span>
+                        </div>
+                    </div>
+
+                    <div class="result-content">
+                        <div class="url-display">
+                            <label class="url-label">Sua URL curta</label>
+                            <div class="url-box">
+                                <input
+                                    type="text"
+                                    id="shortUrlDisplay"
+                                    class="short-url"
+                                    readonly
+                                >
+                                <button id="copyBtn" class="copy-btn" title="Copiar">
+                                    <svg class="copy-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                                        <path d="M3 13V5C3 3.89543 3.89543 3 5 3H13" stroke="currentColor" stroke-width="1.5"/>
+                                    </svg>
+                                    <svg class="check-icon hidden" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M5 10L8 13L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="qr-code-section" id="qrCodeSection">
+                            <label class="url-label">QR Code</label>
+                            <div class="qr-code-container">
+                                <img id="qrCodeImage" class="qr-code" alt="QR Code">
+                            </div>
+                            <button id="downloadQrBtn" class="download-qr-btn">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                    <path d="M8 2V11M8 11L5 8M8 11L11 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    <path d="M3 14H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                </svg>
+                                Baixar QR Code
+                            </button>
+                        </div>
+
+                        <div class="url-info">
+                            <div class="info-item">
+                                <span class="info-label">URL original</span>
+                                <span id="originalUrl" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Criado em</span>
+                                <span id="createdAt" class="info-value"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="createNewBtn" class="create-new-btn">
+                        Criar outro link
+                    </button>
+                </div>
+
+                <div id="errorMessage" class="error-message hidden">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                        <path d="M10 6V10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="10" cy="14" r="1" fill="currentColor"/>
+                    </svg>
+                    <span id="errorText"></span>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Rápido e Simples</h3>
+                    <p class="feature-description">Encurte URLs em segundos</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3 class="feature-title">Seguro</h3>
+                    <p class="feature-description">Seus links estão protegidos</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">QR Code Grátis</h3>
+                    <p class="feature-description">Compartilhe facilmente</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Feito com <span class="heart">♥</span> usando GoTiny API (Marcel Féo)</p>
+        </footer>
     </div>
-</div>
-
-<!-- FOOTER -->
-<footer class="bg-dark text-light text-center py-3">
-    <small>© 2026 GoTiny - Encurtador, Compactador e Ferramentas Web</small>
-</footer>
 
     <script src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>
