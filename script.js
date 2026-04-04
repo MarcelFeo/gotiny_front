@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:8081';
+const API_BASE_URL = 'https://gotiny-api-rctr.onrender.com';
 const API_ENDPOINTS = {
     shorten: `${API_BASE_URL}/gotiny`,
     redirect: `${API_BASE_URL}/r/`
